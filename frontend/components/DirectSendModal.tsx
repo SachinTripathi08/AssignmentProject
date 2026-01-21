@@ -16,16 +16,14 @@ const DirectSendModal = ({ onClose }: { onClose: () => void }) => {
       setSuccess('');
       setLoading(true);
 
-      console.log('Form data:', data); // Debug
-
-      // Parse recipients from textarea (comma or newline separated)
+      console.log('Form data:', data); 
       const recipientsText = data.recipients.trim();
       const recipients = recipientsText
         .split(/[,\n]/)
         .map((email: string) => email.trim())
         .filter((email: string) => email);
 
-      console.log('Parsed recipients:', recipients); // Debug
+      console.log('Parsed recipients:', recipients); 
 
       if (recipients.length === 0) {
         setError('Please enter at least one email address');
@@ -33,7 +31,7 @@ const DirectSendModal = ({ onClose }: { onClose: () => void }) => {
         return;
       }
 
-      // Validate emails
+    
       const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
       const invalidEmails = recipients.filter((email: string) => !emailRegex.test(email));
       if (invalidEmails.length > 0) {
@@ -51,23 +49,23 @@ const DirectSendModal = ({ onClose }: { onClose: () => void }) => {
         userId: session?.user?.email || 'user',
       };
 
-      console.log('Sending payload:', payload); // Debug
+      console.log('Sending payload:', payload); 
 
       const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001';
       const response = await axios.post(`${apiUrl}/api/send-now`, payload);
       
-      console.log('Response:', response.data); // Debug
+      console.log('Response:', response.data);
 
       setSuccess(`✓ Email sent immediately to ${recipients.length} recipient(s)`);
       reset();
       
-      // Close modal after 1.5 seconds
+    
       setTimeout(() => {
         onClose();
       }, 1500);
     } catch (err: any) {
-      console.error('Error details:', err); // Debug
-      console.error('Error response:', err.response?.data); // Debug
+      console.error('Error details:', err); 
+      console.error('Error response:', err.response?.data); 
       setError(err.response?.data?.error || err.message || 'Failed to send email');
       setLoading(false);
     }
